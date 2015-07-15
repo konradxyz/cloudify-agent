@@ -129,15 +129,19 @@ def cfy_agent_attributes(cloudify_agent):
         if cloudify_agent['local']:
             workflows_worker = cloudify_agent.get('workflows_worker', False)
             suffix = '_workflows' if workflows_worker else ''
-            name = '{0}{1}'.format(ctx.deployment.id, suffix)
+            queue_name = '{0}{1}'.format(ctx.deployment.id, suffix)
         else:
-            name = ctx.instance.id
-        cloudify_agent['name'] = name
+            queue_name = ctx.instance.id
+        manager_uid = ctx.bootstrap_context.manager_uid
+        if manager_uid:
+            manager_sufix = '_{0}'.format(manager_uid)
+        else:
+            manager_sufix = ''
+        cloudify_agent['name'] = '{0}{1}'.format(queue_name, manager_sufix)
 
     if 'queue' not in cloudify_agent:
 
-        # by default, the queue of the agent is the same as the name
-        cloudify_agent['queue'] = cloudify_agent['name']
+        cloudify_agent['queue'] = queue_name
 
     if 'manager_ip' not in cloudify_agent:
 
