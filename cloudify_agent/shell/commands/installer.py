@@ -30,7 +30,7 @@ def install_local(agent_file):
     if agent_file is None:
         raise click.ClickException('--agent-file should be specified.')
     cloudify_agent = json.load(agent_file)
-    os.environ['CELERY_BROKER_URL'] = cloudify_agent['broker_url']
+    os.environ['CELERY_BROKER_URL'] = str(cloudify_agent['broker_url'])
     installer = prepare_local_installer(cloudify_agent)
     installer.create_agent()
     installer.configure_agent()
