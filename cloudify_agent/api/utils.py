@@ -69,17 +69,20 @@ class _Internal(object):
 
         return os.environ[cls.CLOUDIFY_DAEMON_USER_KEY]
 
-    @staticmethod
-    def get_storage_directory(username=None):
+    @classmethod
+    def get_storage_directory(cls, username=None):
 
         """
         Retrieve path to the directory where all daemon
         registered under a specific username will be stored.
+        If no `username` is provided, username under which current daemon
+        was installed will be used.
 
         :param username: the user
 
         """
-
+        if username is None and cls.CLOUDIFY_DAEMON_USER_KEY in os.environ:
+            username = cls.get_daemon_user()
         return os.path.join(get_home_dir(username), '.cfy-agent')
 
     @staticmethod
