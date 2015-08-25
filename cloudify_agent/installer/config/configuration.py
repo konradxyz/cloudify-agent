@@ -241,7 +241,7 @@ def installation_attributes(cloudify_agent, runner):
                 # 'pwd' module does not exists in a windows python
                 # installation.
                 # TODO - maybe use some environment variables heuristics?
-                basedir = 'C:\\Users\\{0}'.format(cloudify_agent['user'])
+                basedir = utils.get_windows_home_dir(cloudify_agent['user'])
             else:
                 basedir = runner.home_dir(cloudify_agent['user'])
         cloudify_agent['basedir'] = basedir

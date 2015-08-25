@@ -17,6 +17,7 @@ import click
 import json
 import os
 
+from cloudify_agent.api import utils
 from cloudify_agent.shell.decorators import handle_failures
 from cloudify_agent.installer.operations import prepare_local_installer
 
@@ -31,6 +32,7 @@ def install_local(agent_file):
         raise click.ClickException('--agent-file should be specified.')
     cloudify_agent = json.load(agent_file)
     os.environ['CELERY_BROKER_URL'] = str(cloudify_agent['broker_url'])
+    os.environ[utils.internal.CLOUDIFY_DAEMON_USER_KEY] = str(cloudify_agent['user'])
     installer = prepare_local_installer(cloudify_agent)
     installer.create_agent()
     installer.configure_agent()
